@@ -8,7 +8,7 @@ from simulate import simulate_ber, sweep
 from modulation import BITS_PER_SYMBOL, get_constellation, modulate
 from channel import awgn
 from theory import THEORY
-
+from bits import generate_bits
 
 # ---------------- PAGE CONFIG ----------------
 
