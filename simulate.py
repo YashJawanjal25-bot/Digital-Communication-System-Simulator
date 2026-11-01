@@ -10,7 +10,7 @@ import numpy as np
 
 from bits import generate_bits
 from channel import awgn
-from modulation import modulate, demodulate
+from modulation import BITS_PER_SYMBOL, modulate, demodulate
 from theory import THEORY
 
 
