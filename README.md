@@ -1,97 +1,150 @@
-# Digital Communication System Simulator
+# 📡 Digital Communication System Simulator
 
-A Monte Carlo simulator of a baseband digital communication link: random bit
-generation, Gray-coded **BPSK / QPSK / 16-QAM** modulation, an **AWGN**
-channel, hard-decision demodulation, and **BER vs Eb/N0** analysis with
-theoretical reference curves.
+An interactive **Digital Communication System Simulator** built using Python and Streamlit. It simulates a baseband digital communication link using Gray-coded **BPSK, QPSK, and 16-QAM** modulation over an Additive White Gaussian Noise (AWGN) channel.
 
-Built as portfolio project #1 for an Electrical Engineering (Communication)
-major. No hardware or licence required — pure Python + NumPy/SciPy/Matplotlib.
+The project performs Monte Carlo simulations, calculates Bit Error Rate (BER), compares simulated results with theoretical BER curves, and visualizes signal constellation diagrams.
 
-## Theory in brief
+🚀 **Live Demo:** [Add your Streamlit App URL here]
 
-**Transmitter.** A block of pseudo-random bits is grouped into symbols of
-*k* bits (k = 1, 2, 4) and mapped to complex constellation points. All
-constellations are Gray-coded (adjacent points differ in exactly one bit,
-so the most likely symbol error corrupts only one bit) and normalized to
-unit average symbol energy, E[|s|²] = 1:
+## ✨ Features
 
-- BPSK:  ±1
-- QPSK:  (±1 ± j)/√2
-- 16-QAM: (±1, ±3) × (±1, ±3) scaled by 1/√10
+- **Multiple Modulation Techniques:** BPSK, QPSK, and 16-QAM.
+- **AWGN Channel:** Simulates noise effects on transmitted signals.
+- **Interactive Simulation:** Adjust Eb/N0, target errors, and simulation bit limits.
+- **BER Analysis:** Compare simulated and theoretical BER.
+- **Interactive BER Graphs:** Visualize BER versus Eb/N0 using Plotly.
+- **Constellation Visualization:** Compare ideal and noisy constellation points.
+- **Signal Analysis:** Compare transmitted and received binary data.
+- **CSV Export:** Download BER simulation results.
+- **Monte Carlo Simulation:** Evaluate communication system performance.
 
-**Channel.** The AWGN channel adds circularly symmetric complex Gaussian
-noise. For a target Eb/N0 (linear γ) and unit-energy symbols, Eb = 1/k,
-N0 = Eb/γ, and each of the real/imaginary noise components has variance
-N0/2.
+## 🛠️ Technologies Used
 
-**Receiver.** Hard-decision minimum-Euclidean-distance detection: each
-received symbol is decoded to the nearest constellation point, then mapped
-back to bits. The bit error rate (BER) is (# bit errors) / (# bits sent).
+- Python
+- NumPy
+- SciPy
+- Pandas
+- Matplotlib
+- Plotly
+- Streamlit
 
-**Theoretical reference curves** (standard textbook results for Gray-coded
-constellations over AWGN):
+## 📊 Modulation Techniques
 
-- BPSK:  Pb = Q(√(2·Eb/N0))
-- QPSK:  Pb = Q(√(2·Eb/N0))  — Gray-coded QPSK matches BPSK bit-for-bit,
-  because each bit sees an equivalent BPSK channel
-- 16-QAM: Pb ≈ (3/8)·erfc(√(0.4·Eb/N0))  (Proakis-style approximation)
+| Technique | Bits per Symbol | Constellation |
+|---|---:|---|
+| BPSK | 1 | 2 points |
+| QPSK | 2 | 4 points |
+| 16-QAM | 4 | 16 points |
 
-## How to run
+All modulation schemes use Gray coding and normalized unit average symbol energy.
+
+## 📖 Theory
+
+**Transmitter:** Random binary data is generated and mapped into complex modulation symbols.
+
+**Channel:** The AWGN channel adds Gaussian noise based on the selected Eb/N0 value.
+
+**Receiver:** Hard-decision minimum-Euclidean-distance detection recovers the transmitted bits.
+
+**Bit Error Rate:**
+
+BER = Number of bit errors / Total transmitted bits
+
+### Theoretical BER Expressions
+
+- BPSK: Pb = Q(√(2 × Eb/N0))
+- QPSK: Pb = Q(√(2 × Eb/N0))
+- 16-QAM: Pb ≈ (3/8) × erfc(√(0.4 × Eb/N0))
+
+## 🚀 Run Locally
+
+### 1. Clone the repository
+
+```bash
+git clone YOUR_REPOSITORY_URL
+cd YOUR_REPOSITORY_NAME
+```
+
+### 2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
-python3 run_simulation.py
 ```
 
-This runs the Monte Carlo sweep (Eb/N0 = 0–10 dB; each point simulates until
-100 bit errors are observed, capped at 10M bits for BPSK/QPSK and 2M bits
-for 16-QAM) and writes to `results/`:
+### 3. Launch the Streamlit application
 
-- `ber_vs_snr.png` — simulated vs theoretical BER curves (log scale)
-- `constellations.png` — clean and noisy constellation diagrams per scheme
-- `verification.txt` — numerical simulation-vs-theory comparison
-
-Takes on the order of a minute on a modern laptop.
-
-## Results
-
-Monte Carlo sweep, Eb/N0 = 0–10 dB (100 target errors per point; up to 10M
-bits for BPSK/QPSK, 2M for 16-QAM; ~7 s runtime). Simulated curves sit on
-the theoretical curves across the whole range:
-
-| Eb/N0 (dB) | BPSK sim | BPSK theory | QPSK sim | QPSK theory | 16-QAM sim | 16-QAM theory |
-|---|---|---|---|---|---|---|
-| 0 | 7.78e-02 | 7.87e-02 | 7.79e-02 | 7.87e-02 | 1.41e-01 | 1.39e-01 |
-| 5 | 5.94e-03 | 5.95e-03 | 5.69e-03 | 5.95e-03 | 4.13e-02 | 4.19e-02 |
-| 10 | 3.60e-06 | 3.87e-06 | 3.40e-06 | 3.87e-06 | 1.86e-03 | 1.75e-03 |
-
-Agreement (max |log10(sim) − log10(theory)| over points with ≥10 errors):
-BPSK 0.050, QPSK 0.056, 16-QAM 0.024 — all within Monte Carlo tolerance.
-As expected, Gray-coded QPSK matches BPSK exactly, and 16-QAM needs
-~4 dB more Eb/N0 than BPSK for the same BER (the price of 4× spectral
-efficiency). Full numbers: `results/verification.txt`; plots:
-`results/ber_vs_snr.png`, `results/constellations.png`.
-
-## Project structure
-
+```bash
+streamlit run app.py
 ```
-digital-comm-simulator/
-├── digital_comm_sim/
-│   ├── bits.py         # seedable pseudo-random bit generation
-│   ├── modulation.py   # Gray-coded BPSK/QPSK/16-QAM mod + demod
-│   ├── channel.py      # AWGN channel calibrated to Eb/N0
-│   ├── theory.py       # closed-form BER expressions
-│   ├── simulate.py     # Monte Carlo BER sweep driver
-│   └── plots.py        # BER curves + constellation diagrams
-├── run_simulation.py   # end-to-end run: sweep, plots, verification
+
+### 4. Run the original simulation
+
+```bash
+python run_simulation.py
+```
+
+The original simulation generates:
+
+- `results/ber_vs_snr.png`
+- `results/constellations.png`
+- `results/verification.txt`
+
+## 📁 Project Structure
+
+```text
+Digital-Communication-System-Simulator/
+│
+├── app.py
+├── run_simulation.py
 ├── requirements.txt
-└── README.md
+├── README.md
+│
+├── digital_comm_sim/
+│   ├── __init__.py
+│   ├── bits.py
+│   ├── channel.py
+│   ├── modulation.py
+│   ├── simulate.py
+│   ├── plots.py
+│   └── theory.py
+│
+└── results/
 ```
 
-## Possible extensions
+## 📈 Simulation Results
 
-- Soft-decision decoding and LLRs
-- Fading channels (Rayleigh/Rician)
-- Forward error correction (convolutional / LDPC codes)
-- Higher-order QAM (64-QAM, 256-QAM) and pulse shaping
+The Monte Carlo simulation evaluates BER over an Eb/N0 range of 0–10 dB and compares the results with theoretical reference curves.
+
+| Eb/N0 (dB) | BPSK Simulated | QPSK Simulated | 16-QAM Simulated |
+|---:|---:|---:|---:|
+| 0 | 7.78e-02 | 7.79e-02 | 1.41e-01 |
+| 5 | 5.94e-03 | 5.69e-03 | 4.13e-02 |
+| 10 | 3.60e-06 | 3.40e-06 | 1.86e-03 |
+
+Results demonstrate that BER decreases as Eb/N0 increases. Gray-coded QPSK has approximately the same theoretical bit-error performance as BPSK, while 16-QAM offers higher spectral efficiency with greater noise sensitivity.
+
+## ☁️ Deployment
+
+The interactive application can be deployed using **Streamlit Community Cloud**.
+
+1. Push the project to GitHub.
+2. Connect your GitHub repository to Streamlit Community Cloud.
+3. Select `app.py` as the main application file.
+4. Deploy and access the application through its public URL.
+
+## 🔮 Future Improvements
+
+- Soft-decision decoding and Log-Likelihood Ratios (LLRs).
+- Rayleigh and Rician fading channels.
+- Forward Error Correction using convolutional and LDPC codes.
+- Higher-order modulation such as 64-QAM and 256-QAM.
+- Pulse shaping and matched filtering.
+- Eye diagram and signal spectrum visualization.
+
+## 👨‍💻 Author
+
+Developed as an Electrical and Electronics / Electronics and Telecommunication engineering portfolio project to explore digital modulation, communication channels, and BER performance analysis.
+
+---
+
+**If you find this project useful, consider giving it a ⭐ on GitHub!**
