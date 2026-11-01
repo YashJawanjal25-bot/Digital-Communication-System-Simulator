@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from simulate import simulate_ber, sweep
-from modulation import BITS_PER_SYMBOL, get_constellation, modulate
+from modulation import BITS_PER_SYMBOL, get_constellation, modulate, demodulate
 from channel import awgn
 from theory import THEORY
 from bits import generate_bits
