@@ -4,13 +4,10 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
-from digital_comm_sim.simulate import simulate_ber, sweep
-from digital_comm_sim.modulation import (
-    BITS_PER_SYMBOL, get_constellation, modulate, demodulate
-)
-from digital_comm_sim.channel import awgn
-from digital_comm_sim.bits import generate_bits
-from digital_comm_sim.theory import THEORY
+from simulate import simulate_ber, sweep
+from modulation import BITS_PER_SYMBOL, get_constellation, modulate
+from channel import awgn
+from theory import THEORY
 
 
 # ---------------- PAGE CONFIG ----------------
