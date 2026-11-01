@@ -8,9 +8,10 @@ observed or ``max_bits`` bits have been simulated, whichever comes first.
 
 import numpy as np
 
-from .bits import generate_bits
-from .modulation import BITS_PER_SYMBOL, modulate, demodulate
-from .channel import awgn
+from bits import generate_bits
+from channel import awgn
+from modulation import modulate, demodulate
+from theory import THEORY
 
 
 def simulate_ber(scheme: str, eb_n0_db: float, target_errors: int = 100,
